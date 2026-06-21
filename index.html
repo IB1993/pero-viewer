@@ -13,59 +13,70 @@ header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
 
 .main { max-width: 880px; margin: 0 auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 10px; }
 
-.sel-bar {
+/* 車種バー */
+.car-bar {
   background: #fff; border-radius: 10px; border: 1px solid #ddd;
-  padding: 13px 16px;
+  padding: 12px 16px;
   display: flex; align-items: center; justify-content: space-between;
   cursor: pointer; user-select: none;
 }
-.sel-bar:hover { border-color: #999; }
-.crumbs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.crumb { font-size: 14px; font-weight: 500; color: #1a1a2e; }
-.crumb-sep { color: #ccc; font-size: 15px; }
+.car-bar:hover { border-color: #999; }
+.car-current { display: flex; align-items: center; gap: 8px; }
+.car-label { font-size: 11px; color: #888; letter-spacing: 0.06em; }
+.car-value { font-size: 15px; font-weight: 500; color: #1a1a2e; }
 .change-btn {
   background: #1a1a2e; color: #fff; border: none;
-  border-radius: 7px; padding: 7px 18px;
+  border-radius: 7px; padding: 7px 16px;
   font-size: 13px; cursor: pointer; white-space: nowrap;
 }
 .change-btn:hover { background: #2d2d52; }
 
-.ladder {
+/* 車種ドロップダウン */
+.car-dropdown {
   background: #fff; border-radius: 10px; border: 1px solid #ddd;
-  overflow: hidden; display: none;
+  padding: 14px 16px; display: none;
 }
-.ladder.open { display: block; }
-.ladder-inner { padding: 22px 22px 18px; display: flex; flex-direction: column; }
+.car-dropdown.open { display: block; }
+.car-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.car-btn {
+  padding: 9px 20px; border-radius: 7px;
+  border: 1px solid #ddd; background: #fafafa;
+  font-size: 14px; cursor: pointer; color: #333;
+  transition: all 0.1s;
+}
+.car-btn:hover { background: #eef2ff; border-color: #99a; }
+.car-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
 
-.rung { display: flex; flex-direction: column; }
-.rung-head {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 11px; color: #888; letter-spacing: 0.08em; margin-bottom: 10px;
+/* 設置位置・カラー パネル */
+.ctrl-panel {
+  background: #fff; border-radius: 10px; border: 1px solid #ddd;
+  padding: 16px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
 }
-.rung-num {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: #1a1a2e; color: #fff;
-  font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+@media (max-width: 560px) { .ctrl-panel { grid-template-columns: 1fr; } }
+
+.ctrl-section {}
+.ctrl-label {
+  font-size: 11px; color: #888; letter-spacing: 0.06em;
+  margin-bottom: 10px; display: block;
 }
-.rung-opts { display: flex; flex-wrap: wrap; gap: 6px; }
-.rung-btn {
-  display: flex; align-items: center; gap: 7px;
-  padding: 8px 16px; border-radius: 7px;
+.ctrl-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.ctrl-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 7px;
   border: 1px solid #ddd; background: #fafafa;
   font-size: 13px; cursor: pointer; color: #333;
   transition: all 0.1s;
 }
-.rung-btn:hover { background: #eef2ff; border-color: #99a; }
-.rung-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+.ctrl-btn:hover { background: #eef2ff; border-color: #99a; }
+.ctrl-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
 .cdot {
   width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0;
   border: 1px solid rgba(0,0,0,0.12);
 }
-.rung-btn.active .cdot { border-color: rgba(255,255,255,0.3); }
+.ctrl-btn.active .cdot { border-color: rgba(255,255,255,0.3); }
 
-.connector { height: 22px; display: flex; align-items: stretch; padding-left: 10px; }
-.connector-line { width: 2px; background: #e4e4e4; }
-
+/* View タブ */
 .view-tabs {
   display: flex; background: #fff;
   border-radius: 10px; border: 1px solid #ddd;
@@ -78,10 +89,10 @@ header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
 .view-tab:not(:last-child) { border-right: 1px solid #eee; }
 .view-tab.active { background: #1a1a2e; color: #fff; }
 
+/* 画像エリア */
 .img-card { background: #fff; border-radius: 10px; border: 1px solid #ddd; padding: 16px; }
-
 .view-panel { display: flex; flex-direction: column; gap: 10px; }
-.view-panel.hidden { display: none; }
+.view-panel.hidden { display: none !important; }
 
 .img-slot {
   position: relative; background: #f8f8f8;
@@ -109,8 +120,6 @@ header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
 .badge { font-size: 11px; padding: 2px 10px; border-radius: 20px; }
 .badge-ok { background: #e6f4ea; color: #2d7a3a; }
 .badge-ng { background: #fce8e6; color: #b31412; }
-
-.hidden { display: none !important; }
 </style>
 </head>
 <body>
@@ -121,72 +130,67 @@ header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
 
 <div class="main">
 
-  <div class="sel-bar" onclick="toggleLadder()">
-    <div class="crumbs">
-      <span class="crumb" id="crumb-car">RAV4</span>
-      <span class="crumb-sep">›</span>
-      <span class="crumb" id="crumb-pos">ルーフのみ</span>
-      <span class="crumb-sep">›</span>
-      <span class="crumb" id="crumb-color">白</span>
+  <!-- 車種選択バー -->
+  <div class="car-bar" onclick="toggleCarDrop()">
+    <div class="car-current">
+      <span class="car-label">車種</span>
+      <span class="car-value" id="car-value">RAV4</span>
     </div>
-    <button class="change-btn" onclick="event.stopPropagation(); toggleLadder()">▼ 変更</button>
+    <button class="change-btn" onclick="event.stopPropagation(); toggleCarDrop()">▼ 変更</button>
   </div>
 
-  <div class="ladder" id="ladder">
-    <div class="ladder-inner">
-
-      <div class="rung">
-        <div class="rung-head"><div class="rung-num">1</div>車種</div>
-        <div class="rung-opts" id="opts-car">
-          <button class="rung-btn active" onclick="pick('car','RAV4',this)">RAV4</button>
-          <button class="rung-btn" onclick="pick('car','RX',this)">RX</button>
-          <button class="rung-btn" onclick="pick('car','サクラ',this)">サクラ</button>
-          <button class="rung-btn" onclick="pick('car','プリウス',this)">プリウス</button>
-        </div>
-      </div>
-
-      <div class="connector"><div class="connector-line"></div></div>
-
-      <div class="rung">
-        <div class="rung-head"><div class="rung-num">2</div>太陽光パーツ設置位置</div>
-        <div class="rung-opts" id="opts-pos">
-          <button class="rung-btn active" onclick="pick('pos','ルーフのみ',this)">ルーフのみ</button>
-          <button class="rung-btn" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
-          <button class="rung-btn" onclick="pick('pos','ルーフプラスリアガラス',this)">ルーフ＋リアガラス</button>
-          <button class="rung-btn" onclick="pick('pos','ルーフボンネットリアガラス',this)">ルーフ＋ボンネット＋リアガラス</button>
-        </div>
-      </div>
-
-      <div class="connector"><div class="connector-line"></div></div>
-
-      <div class="rung">
-        <div class="rung-head"><div class="rung-num">3</div>ボディカラー</div>
-        <div class="rung-opts" id="opts-color">
-          <button class="rung-btn active" onclick="pick('color','白',this)">
-            <span class="cdot" style="background:#f0f0f0;"></span>白
-          </button>
-          <button class="rung-btn" onclick="pick('color','黒',this)">
-            <span class="cdot" style="background:#222;"></span>黒
-          </button>
-          <button class="rung-btn" onclick="pick('color','メインカラー1',this)">
-            <span class="cdot" id="dot-c1" style="background:#7a8c5e;"></span>
-            <span id="lbl-c1">カラー1</span>
-          </button>
-          <button class="rung-btn" onclick="pick('color','メインカラー2',this)">
-            <span class="cdot" id="dot-c2" style="background:#c0392b;"></span>
-            <span id="lbl-c2">カラー2</span>
-          </button>
-        </div>
-      </div>
-
+  <!-- 車種ドロップダウン -->
+  <div class="car-dropdown" id="car-dropdown">
+    <div class="car-opts">
+      <button class="car-btn active" onclick="pickCar('RAV4',this)">RAV4</button>
+      <button class="car-btn" onclick="pickCar('RX',this)">RX</button>
+      <button class="car-btn" onclick="pickCar('サクラ',this)">サクラ</button>
+      <button class="car-btn" onclick="pickCar('プリウス',this)">プリウス</button>
     </div>
   </div>
 
+  <!-- 設置位置 ＋ カラー（常時表示） -->
+  <div class="ctrl-panel">
+
+    <div class="ctrl-section">
+      <span class="ctrl-label">太陽光パーツ設置位置</span>
+      <div class="ctrl-opts" id="opts-pos">
+        <button class="ctrl-btn active" onclick="pick('pos','ルーフのみ',this)">ルーフのみ</button>
+        <button class="ctrl-btn" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
+        <button class="ctrl-btn" onclick="pick('pos','ルーフプラスリアガラス',this)">ルーフ＋リアガラス</button>
+        <button class="ctrl-btn" onclick="pick('pos','ルーフボンネットリアガラス',this)">ルーフ＋ボンネット＋リアガラス</button>
+      </div>
+    </div>
+
+    <div class="ctrl-section">
+      <span class="ctrl-label">ボディカラー</span>
+      <div class="ctrl-opts" id="opts-color">
+        <button class="ctrl-btn active" onclick="pick('color','白',this)">
+          <span class="cdot" style="background:#f0f0f0;"></span>白
+        </button>
+        <button class="ctrl-btn" onclick="pick('color','黒',this)">
+          <span class="cdot" style="background:#222;"></span>黒
+        </button>
+        <button class="ctrl-btn" onclick="pick('color','メインカラー1',this)">
+          <span class="cdot" id="dot-c1" style="background:#7a8c5e;"></span>
+          <span id="lbl-c1">カラー1</span>
+        </button>
+        <button class="ctrl-btn" onclick="pick('color','メインカラー2',this)">
+          <span class="cdot" id="dot-c2" style="background:#c0392b;"></span>
+          <span id="lbl-c2">カラー2</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- View タブ -->
   <div class="view-tabs">
     <button class="view-tab active" onclick="setView(1,this)">View 1</button>
     <button class="view-tab" onclick="setView(2,this)">View 2</button>
   </div>
 
+  <!-- 画像エリア -->
   <div class="img-card">
 
     <div class="view-panel" id="view1">
@@ -248,21 +252,21 @@ header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
 const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白' };
 
 const POS_LABELS = {
-  'ルーフのみ':             'ルーフのみ',
-  'ルーフプラスボンネット':  'ルーフ＋ボンネット',
-  'ルーフプラスリアガラス':  'ルーフ＋リアガラス',
+  'ルーフのみ':                'ルーフのみ',
+  'ルーフプラスボンネット':     'ルーフ＋ボンネット',
+  'ルーフプラスリアガラス':     'ルーフ＋リアガラス',
   'ルーフボンネットリアガラス': 'ルーフ＋ボンネット＋リアガラス',
 };
 
 const C = {
-  RAV4:    { メインカラー1: { label: 'カラー1（アーバンカーキー）', dot: '#7a8c5e', sfx: '_アーバンカーキー' },
-              メインカラー2: { label: 'カラー2（レッドマイカ）',    dot: '#c0392b', sfx: '_レッドマイカ' } },
-  RX:      { メインカラー1: { label: 'カラー1（ソニックカッパー）',  dot: '#b87333', sfx: '_ソニックカッパー' },
-              メインカラー2: { label: 'カラー2（ブルーマイカ）',    dot: '#2980b9', sfx: '_ブルーマイカ' } },
-  サクラ:   { メインカラー1: { label: 'カラー1（ソルベブルー）',   dot: '#5b9bd5', sfx: '_ソルベブルー' },
-              メインカラー2: { label: 'カラー2（スパークリングレッド）', dot: '#cc2200', sfx: '_スパークリングレッド' } },
-  プリウス: { メインカラー1: { label: 'カラー1',                   dot: '#888',    sfx: '' },
-              メインカラー2: { label: 'カラー2',                   dot: '#888',    sfx: '' } },
+  RAV4:    { メインカラー1: { label: 'カラー1（アーバンカーキー）',      dot: '#7a8c5e', sfx: '_アーバンカーキー' },
+              メインカラー2: { label: 'カラー2（レッドマイカ）',          dot: '#c0392b', sfx: '_レッドマイカ' } },
+  RX:      { メインカラー1: { label: 'カラー1（ソニックカッパー）',       dot: '#b87333', sfx: '_ソニックカッパー' },
+              メインカラー2: { label: 'カラー2（ブルーマイカ）',          dot: '#2980b9', sfx: '_ブルーマイカ' } },
+  サクラ:   { メインカラー1: { label: 'カラー1（ソルベブルー）',          dot: '#5b9bd5', sfx: '_ソルベブルー' },
+              メインカラー2: { label: 'カラー2（スパークリングレッド）',   dot: '#cc2200', sfx: '_スパークリングレッド' } },
+  プリウス: { メインカラー1: { label: 'カラー1',                         dot: '#888',    sfx: '' },
+              メインカラー2: { label: 'カラー2',                         dot: '#888',    sfx: '' } },
 };
 
 function mainPath() {
@@ -276,7 +280,6 @@ function colorLabel() {
   return (color === 'メインカラー1' || color === 'メインカラー2') ? (C[car]?.[color]?.label || color) : color;
 }
 
-let mainOk = false;
 function load(imgId, noId, src) {
   const img = document.getElementById(imgId);
   const no  = document.getElementById(noId);
@@ -295,10 +298,8 @@ function setBadge(ok) {
 function updateAll() {
   const { car, pos } = state;
   const cl = colorLabel();
-  document.getElementById('crumb-car').textContent   = car;
-  document.getElementById('crumb-pos').textContent   = POS_LABELS[pos] || pos;
-  document.getElementById('crumb-color').textContent = cl;
-  document.getElementById('meta-label').textContent  = `${car} ／ ${POS_LABELS[pos]} ／ ${cl}`;
+  document.getElementById('car-value').textContent  = car;
+  document.getElementById('meta-label').textContent = `${car} ／ ${POS_LABELS[pos]} ／ ${cl}`;
   load('img-main',  'no-main',  mainPath());
   load('img-rg',    'no-rg',    `${car}リアガラス.png`);
   load('img-front', 'no-front', `${car}正面.png`);
@@ -313,17 +314,23 @@ function syncColorBtns() {
   });
 }
 
-function toggleLadder() {
-  document.getElementById('ladder').classList.toggle('open');
+function toggleCarDrop() {
+  document.getElementById('car-dropdown').classList.toggle('open');
+}
+
+function pickCar(val, btn) {
+  state.car = val;
+  document.querySelectorAll('.car-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('car-dropdown').classList.remove('open');
+  syncColorBtns();
+  updateAll();
 }
 
 function pick(group, val, btn) {
   state[group] = val;
-  const map = { car: 'opts-car', pos: 'opts-pos', color: 'opts-color' };
-  document.querySelectorAll(`#${map[group]} .rung-btn`).forEach(b => b.classList.remove('active'));
+  document.querySelectorAll(`#opts-${group} .ctrl-btn`).forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if (group === 'car')   syncColorBtns();
-  if (group === 'color') document.getElementById('ladder').classList.remove('open');
   updateAll();
 }
 
