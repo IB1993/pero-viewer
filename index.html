@@ -155,6 +155,7 @@ header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
     <div class="ctrl-section">
       <span class="ctrl-label">太陽光パーツ設置位置</span>
       <div class="ctrl-opts" id="opts-pos">
+        <button class="ctrl-btn" onclick="pick('pos','パネルなし',this)">パネルなし</button>
         <button class="ctrl-btn active" onclick="pick('pos','ルーフのみ',this)">ルーフのみ</button>
         <button class="ctrl-btn" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
         <button class="ctrl-btn" onclick="pick('pos','ルーフプラスリアガラス',this)">ルーフ＋リアガラス</button>
@@ -252,6 +253,7 @@ header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
 const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白' };
 
 const POS_LABELS = {
+  'パネルなし':                'パネルなし',
   'ルーフのみ':                'ルーフのみ',
   'ルーフプラスボンネット':     'ルーフ＋ボンネット',
   'ルーフプラスリアガラス':     'ルーフ＋リアガラス',
