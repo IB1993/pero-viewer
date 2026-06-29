@@ -260,8 +260,9 @@ const POS_LABELS = {
   'ルーフボンネットリアガラス': 'ルーフ＋ボンネット＋リアガラス',
 };
 
+// sfx: 斜め上メイン画像のカラー接尾辞 / sfxSub: リアガラス・正面・真後ろ用
 const C = {
-  RAV4:    { メインカラー1: { label: 'カラー1（アーバンカーキー）',      dot: '#7a8c5e', sfx: '_アーバンカーキー' },
+  RAV4:    { メインカラー1: { label: 'カラー1（アーバンカーキー）',      dot: '#7a8c5e', sfx: '_アーバンカーキー', sfxSub: '_カーキー' },
               メインカラー2: { label: 'カラー2（レッドマイカ）',          dot: '#c0392b', sfx: '_レッドマイカ' } },
   RX:      { メインカラー1: { label: 'カラー1（ソニックカッパー）',       dot: '#b87333', sfx: '_ソニックカッパー' },
               メインカラー2: { label: 'カラー2（ブルーマイカ）',          dot: '#2980b9', sfx: '_ブルーマイカ' } },
@@ -271,10 +272,37 @@ const C = {
               メインカラー2: { label: 'カラー2',                         dot: '#888',    sfx: '' } },
 };
 
+function getSfx(car, color, isMain) {
+  if (color !== 'メインカラー1' && color !== 'メインカラー2') return '';
+  const info = C[car]?.[color];
+  if (!info) return '';
+  return (!isMain && info.sfxSub) ? info.sfxSub : (info.sfx || '');
+}
+
 function mainPath() {
   const { car, pos, color } = state;
-  const sfx = (color === 'メインカラー1' || color === 'メインカラー2') ? (C[car]?.[color]?.sfx || '') : '';
-  return `${car}/${car}_${pos}_${color}${sfx}.png`;
+  return `${car}/${car}_${pos}_${color}${getSfx(car, color, true)}.png`;
+}
+
+function rgPath() {
+  const { car, pos, color } = state;
+  const hasPanel = pos === 'ルーフプラスリアガラス' || pos === 'ルーフボンネットリアガラス';
+  if (!hasPanel) return `${car}/${car}_リアガラス_パネル無し_白.png`;
+  return `${car}/${car}_リアガラス_パネルあり_${color}${getSfx(car, color, false)}.png`;
+}
+
+function frontPath() {
+  const { car, pos, color } = state;
+  const hasBonnet = pos === 'ルーフプラスボンネット' || pos === 'ルーフボンネットリアガラス';
+  if (!hasBonnet) return `${car}/${car}_正面_パネル無し_${color}.png`;
+  return `${car}/${car}_正面_ボンネット＋ルーフ_${color}${getSfx(car, color, false)}.png`;
+}
+
+function rearPath() {
+  const { car, pos, color } = state;
+  const hasRearGlass = pos === 'ルーフプラスリアガラス' || pos === 'ルーフボンネットリアガラス';
+  if (!hasRearGlass) return `${car}/${car}_真後ろ_パネル無し_白.png`;
+  return `${car}/${car}_真後ろ_リアガラスあり_${color}${getSfx(car, color, false)}.png`;
 }
 
 function colorLabel() {
@@ -303,9 +331,9 @@ function updateAll() {
   document.getElementById('car-value').textContent  = car;
   document.getElementById('meta-label').textContent = `${car} ／ ${POS_LABELS[pos]} ／ ${cl}`;
   load('img-main',  'no-main',  mainPath());
-  load('img-rg',    'no-rg',    `${car}リアガラス.png`);
-  load('img-front', 'no-front', `${car}正面.png`);
-  load('img-rear',  'no-rear',  `${car}真後ろ.png`);
+  load('img-rg',    'no-rg',    rgPath());
+  load('img-front', 'no-front', frontPath());
+  load('img-rear',  'no-rear',  rearPath());
 }
 
 function syncColorBtns() {
