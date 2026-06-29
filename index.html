@@ -251,15 +251,21 @@ function getSfx(car, color, isMain) {
   return (!isMain && info.sfxSub) ? info.sfxSub : (info.sfx || '');
 }
 
+const POS_FILE  = { 'パネルなし': 'なし', 'ルーフのみ': 'ルーフ', 'ルーフプラスボンネット': 'ルーフ＋ボンネット' };
+const COLOR_FILE = { '白': '白', '黒': '黒', 'メインカラー1': 'カラー1', 'メインカラー2': 'カラー2' };
+
 function mainPath() {
   const { car, pos, color } = state;
-  return `${car}/${car}_${pos}_${color}${getSfx(car, color, true)}.png`;
+  const pf = POS_FILE[pos];
+  const cf = COLOR_FILE[color];
+  return `${car}/${car}_斜め上_${pf}_${cf}${getSfx(car, color, true)}.png`;
 }
 
 function rgPath() {
   const { car, color, rg } = state;
-  if (rg === 'パネルなし') return `${car}/${car}_リアガラス_パネル無し_白.png`;
-  return `${car}/${car}_リアガラス_パネルあり_${color}${getSfx(car, color, false)}.png`;
+  if (rg === 'パネルなし') return `${car}/${car}_リアガラス_パネルなし_白.png`;
+  const cf = COLOR_FILE[color];
+  return `${car}/${car}_リアガラス_パネルあり_${cf}${getSfx(car, color, false)}.png`;
 }
 
 function load(imgId, noId, src, badgeId) {
