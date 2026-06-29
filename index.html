@@ -6,118 +6,124 @@
 <title>太陽光発電パーツ搭載車両ビューア</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Meiryo', 'Yu Gothic', sans-serif; background: #f0f2f5; color: #222; min-height: 100vh; }
-
-header { background: #1a1a2e; color: #fff; padding: 14px 28px; }
-header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
-
-.main { max-width: 880px; margin: 0 auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 10px; }
-
-/* 車種バー */
-.car-bar {
-  background: #fff; border-radius: 10px; border: 1px solid #ddd;
-  padding: 12px 16px;
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; user-select: none;
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'Meiryo', 'Yu Gothic', sans-serif;
+  background: #f0f2f5; color: #222;
+  display: flex; flex-direction: column; height: 100vh;
 }
-.car-bar:hover { border-color: #999; }
-.car-current { display: flex; align-items: center; gap: 8px; }
-.car-label { font-size: 11px; color: #888; letter-spacing: 0.06em; }
-.car-value { font-size: 15px; font-weight: 500; color: #1a1a2e; }
+
+header {
+  background: #1a1a2e; color: #fff;
+  padding: 10px 20px; flex-shrink: 0;
+}
+header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
+
+/* ── コントロールバー ── */
+.ctrl-bar {
+  background: #fff; border-bottom: 1px solid #ddd;
+  padding: 10px 16px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 20px;
+}
+.divider { width: 1px; height: 28px; background: #e0e0e0; flex-shrink: 0; }
+
+.ctrl-group { display: flex; align-items: center; gap: 8px; }
+.ctrl-label { font-size: 11px; color: #888; white-space: nowrap; }
+
+/* 車種 */
+.car-wrap { position: relative; }
+.car-display { display: flex; align-items: center; gap: 8px; }
+.car-name { font-size: 14px; font-weight: 600; color: #1a1a2e; }
 .change-btn {
   background: #1a1a2e; color: #fff; border: none;
-  border-radius: 7px; padding: 7px 16px;
-  font-size: 13px; cursor: pointer; white-space: nowrap;
+  border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer;
 }
 .change-btn:hover { background: #2d2d52; }
-
-/* 車種ドロップダウン */
 .car-dropdown {
-  background: #fff; border-radius: 10px; border: 1px solid #ddd;
-  padding: 14px 16px; display: none;
+  position: absolute; top: calc(100% + 6px); left: 0; z-index: 200;
+  background: #fff; border: 1px solid #ddd; border-radius: 8px;
+  padding: 8px; display: none; gap: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12); white-space: nowrap;
 }
-.car-dropdown.open { display: block; }
-.car-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.car-dropdown.open { display: flex; }
 .car-btn {
-  padding: 9px 20px; border-radius: 7px;
-  border: 1px solid #ddd; background: #fafafa;
-  font-size: 14px; cursor: pointer; color: #333;
-  transition: all 0.1s;
+  padding: 7px 16px; border-radius: 6px; border: 1px solid #ddd;
+  background: #fafafa; font-size: 13px; cursor: pointer; color: #333;
 }
-.car-btn:hover { background: #eef2ff; border-color: #99a; }
+.car-btn:hover { background: #eef2ff; }
 .car-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
 
-/* 設置位置・カラー パネル */
-.ctrl-panel {
-  background: #fff; border-radius: 10px; border: 1px solid #ddd;
-  padding: 16px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+/* セグメントボタン（設置位置） */
+.seg { display: flex; border: 1px solid #ddd; border-radius: 7px; overflow: hidden; }
+.seg-btn {
+  padding: 6px 14px; border: none; background: #fafafa;
+  font-size: 13px; cursor: pointer; color: #555;
+  border-right: 1px solid #ddd;
 }
-@media (max-width: 560px) { .ctrl-panel { grid-template-columns: 1fr; } }
+.seg-btn:last-child { border-right: none; }
+.seg-btn:hover { background: #eef2ff; }
+.seg-btn.active { background: #1a1a2e; color: #fff; }
 
-.ctrl-section {}
-.ctrl-label {
-  font-size: 11px; color: #888; letter-spacing: 0.06em;
-  margin-bottom: 10px; display: block;
+/* カラーボタン */
+.color-btns { display: flex; gap: 5px; }
+.color-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 7px; border: 1px solid #ddd;
+  background: #fafafa; font-size: 13px; cursor: pointer; color: #333;
 }
-.ctrl-opts { display: flex; flex-wrap: wrap; gap: 6px; }
-.ctrl-btn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 7px 14px; border-radius: 7px;
-  border: 1px solid #ddd; background: #fafafa;
-  font-size: 13px; cursor: pointer; color: #333;
-  transition: all 0.1s;
-}
-.ctrl-btn:hover { background: #eef2ff; border-color: #99a; }
-.ctrl-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+.color-btn:hover { background: #eef2ff; }
+.color-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
 .cdot {
-  width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0;
-  border: 1px solid rgba(0,0,0,0.12);
+  width: 13px; height: 13px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.14); flex-shrink: 0;
 }
-.ctrl-btn.active .cdot { border-color: rgba(255,255,255,0.3); }
+.color-btn.active .cdot { border-color: rgba(255,255,255,0.3); }
 
-/* View タブ */
-.view-tabs {
-  display: flex; background: #fff;
-  border-radius: 10px; border: 1px solid #ddd;
-  overflow: hidden; width: fit-content;
+/* ── 画像エリア ── */
+.img-area {
+  flex: 1; min-height: 0;
+  display: grid; grid-template-columns: 3fr 2fr;
+  gap: 12px; padding: 12px 16px;
 }
-.view-tab {
-  padding: 9px 30px; border: none; background: transparent;
-  font-size: 13px; cursor: pointer; color: #666;
-}
-.view-tab:not(:last-child) { border-right: 1px solid #eee; }
-.view-tab.active { background: #1a1a2e; color: #fff; }
 
-/* 画像エリア */
-.img-card { background: #fff; border-radius: 10px; border: 1px solid #ddd; padding: 16px; }
-.view-panel { display: flex; flex-direction: column; gap: 10px; }
-.view-panel.hidden { display: none !important; }
+.img-panel {
+  background: #fff; border-radius: 10px; border: 1px solid #ddd;
+  display: flex; flex-direction: column; overflow: hidden; min-height: 0;
+}
+.panel-header {
+  padding: 8px 14px; border-bottom: 1px solid #eee; flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.panel-title { font-size: 11px; color: #888; letter-spacing: 0.04em; }
 
 .img-slot {
-  position: relative; background: #f8f8f8;
-  border-radius: 8px; border: 1px solid #efefef;
+  flex: 1; min-height: 0;
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+  padding: 10px;
 }
-.img-slot.lg { min-height: 320px; }
-.img-slot.md { min-height: 230px; }
-.img-slot img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
-.slot-label {
-  position: absolute; top: 10px; left: 10px;
-  background: rgba(26,26,46,0.55); color: #fff;
-  font-size: 11px; padding: 3px 10px; border-radius: 20px;
-  pointer-events: none;
+.img-slot img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain; display: none;
 }
 .no-img {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  color: #ccc; padding: 32px; font-size: 13px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; color: #ccc; font-size: 12px;
 }
 .no-img svg { opacity: 0.25; }
 
-.meta { padding-top: 12px; display: flex; justify-content: space-between; align-items: center; }
-.meta-label { font-size: 12px; color: #aaa; }
-.badge { font-size: 11px; padding: 2px 10px; border-radius: 20px; }
+/* リアガラスのパネルあり/なしトグル */
+.rg-toggle { display: flex; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
+.rg-btn {
+  padding: 4px 11px; border: none; background: #fafafa;
+  font-size: 12px; cursor: pointer; color: #555;
+  border-right: 1px solid #ddd;
+}
+.rg-btn:last-child { border-right: none; }
+.rg-btn:hover { background: #eef2ff; }
+.rg-btn.active { background: #1a1a2e; color: #fff; }
+
+/* バッジ */
+.badge { font-size: 10px; padding: 2px 9px; border-radius: 20px; }
 .badge-ok { background: #e6f4ea; color: #2d7a3a; }
 .badge-ng { background: #fce8e6; color: #b31412; }
 </style>
@@ -128,148 +134,114 @@ header h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.06em; }
   <h1>太陽光発電パーツ搭載車両ビューア</h1>
 </header>
 
-<div class="main">
+<div class="ctrl-bar">
 
-  <!-- 車種選択バー -->
-  <div class="car-bar" onclick="toggleCarDrop()">
-    <div class="car-current">
-      <span class="car-label">車種</span>
-      <span class="car-value" id="car-value">RAV4</span>
+  <!-- 車種 -->
+  <div class="ctrl-group">
+    <span class="ctrl-label">車種</span>
+    <div class="car-wrap" id="car-wrap">
+      <div class="car-display">
+        <span class="car-name" id="car-value">RAV4</span>
+        <button class="change-btn" onclick="toggleCarDrop()">▼ 変更</button>
+      </div>
+      <div class="car-dropdown" id="car-dropdown">
+        <button class="car-btn active" onclick="pickCar('RAV4',this)">RAV4</button>
+        <button class="car-btn" onclick="pickCar('RX',this)">RX</button>
+        <button class="car-btn" onclick="pickCar('サクラ',this)">サクラ</button>
+        <button class="car-btn" onclick="pickCar('プリウス',this)">プリウス</button>
+      </div>
     </div>
-    <button class="change-btn" onclick="event.stopPropagation(); toggleCarDrop()">▼ 変更</button>
   </div>
 
-  <!-- 車種ドロップダウン -->
-  <div class="car-dropdown" id="car-dropdown">
-    <div class="car-opts">
-      <button class="car-btn active" onclick="pickCar('RAV4',this)">RAV4</button>
-      <button class="car-btn" onclick="pickCar('RX',this)">RX</button>
-      <button class="car-btn" onclick="pickCar('サクラ',this)">サクラ</button>
-      <button class="car-btn" onclick="pickCar('プリウス',this)">プリウス</button>
+  <div class="divider"></div>
+
+  <!-- パーツ設置位置 -->
+  <div class="ctrl-group">
+    <span class="ctrl-label">パーツ設置位置</span>
+    <div class="seg" id="opts-pos">
+      <button class="seg-btn" onclick="pick('pos','パネルなし',this)">なし</button>
+      <button class="seg-btn active" onclick="pick('pos','ルーフのみ',this)">ルーフ</button>
+      <button class="seg-btn" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
     </div>
   </div>
 
-  <!-- 設置位置 ＋ カラー（常時表示） -->
-  <div class="ctrl-panel">
+  <div class="divider"></div>
 
-    <div class="ctrl-section">
-      <span class="ctrl-label">太陽光パーツ設置位置</span>
-      <div class="ctrl-opts" id="opts-pos">
-        <button class="ctrl-btn" onclick="pick('pos','パネルなし',this)">パネルなし</button>
-        <button class="ctrl-btn active" onclick="pick('pos','ルーフのみ',this)">ルーフのみ</button>
-        <button class="ctrl-btn" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
-        <button class="ctrl-btn" onclick="pick('pos','ルーフプラスリアガラス',this)">ルーフ＋リアガラス</button>
-        <button class="ctrl-btn" onclick="pick('pos','ルーフボンネットリアガラス',this)">ルーフ＋ボンネット＋リアガラス</button>
-      </div>
+  <!-- ボディカラー -->
+  <div class="ctrl-group">
+    <span class="ctrl-label">ボディカラー</span>
+    <div class="color-btns" id="opts-color">
+      <button class="color-btn active" onclick="pick('color','白',this)">
+        <span class="cdot" style="background:#f0f0f0;"></span>白
+      </button>
+      <button class="color-btn" onclick="pick('color','黒',this)">
+        <span class="cdot" style="background:#222;"></span>黒
+      </button>
+      <button class="color-btn" onclick="pick('color','メインカラー1',this)">
+        <span class="cdot" id="dot-c1" style="background:#7a8c5e;"></span>カラー1
+      </button>
+      <button class="color-btn" onclick="pick('color','メインカラー2',this)">
+        <span class="cdot" id="dot-c2" style="background:#c0392b;"></span>カラー2
+      </button>
     </div>
-
-    <div class="ctrl-section">
-      <span class="ctrl-label">ボディカラー</span>
-      <div class="ctrl-opts" id="opts-color">
-        <button class="ctrl-btn active" onclick="pick('color','白',this)">
-          <span class="cdot" style="background:#f0f0f0;"></span>白
-        </button>
-        <button class="ctrl-btn" onclick="pick('color','黒',this)">
-          <span class="cdot" style="background:#222;"></span>黒
-        </button>
-        <button class="ctrl-btn" onclick="pick('color','メインカラー1',this)">
-          <span class="cdot" id="dot-c1" style="background:#7a8c5e;"></span>
-          <span id="lbl-c1">カラー1</span>
-        </button>
-        <button class="ctrl-btn" onclick="pick('color','メインカラー2',this)">
-          <span class="cdot" id="dot-c2" style="background:#c0392b;"></span>
-          <span id="lbl-c2">カラー2</span>
-        </button>
-      </div>
-    </div>
-
   </div>
 
-  <!-- View タブ -->
-  <div class="view-tabs">
-    <button class="view-tab active" onclick="setView(1,this)">View 1</button>
-    <button class="view-tab" onclick="setView(2,this)">View 2</button>
+</div>
+
+<!-- 画像エリア -->
+<div class="img-area">
+
+  <!-- 左：斜め上 -->
+  <div class="img-panel">
+    <div class="panel-header">
+      <span class="panel-title">斜め上</span>
+      <span class="badge" id="badge-main"></span>
+    </div>
+    <div class="img-slot">
+      <img id="img-main" alt="" />
+      <div class="no-img" id="no-main">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
+        </svg>
+        画像は未準備です
+      </div>
+    </div>
   </div>
 
-  <!-- 画像エリア -->
-  <div class="img-card">
-
-    <div class="view-panel" id="view1">
-      <div class="img-slot lg">
-        <span class="slot-label">斜め上</span>
-        <img id="img-main" alt="" />
-        <div class="no-img" id="no-main">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
-          </svg>
-          画像は未準備です
-        </div>
-      </div>
-      <div class="img-slot md">
-        <span class="slot-label">リアガラス</span>
-        <img id="img-rg" alt="" />
-        <div class="no-img" id="no-rg">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
-          </svg>
-          画像は未準備です
-        </div>
+  <!-- 右：リアガラス -->
+  <div class="img-panel">
+    <div class="panel-header">
+      <span class="panel-title">リアガラス</span>
+      <div class="rg-toggle">
+        <button class="rg-btn active" onclick="pickRG('パネルなし',this)">パネルなし</button>
+        <button class="rg-btn" onclick="pickRG('パネルあり',this)">パネルあり</button>
       </div>
     </div>
-
-    <div class="view-panel hidden" id="view2">
-      <div class="img-slot md">
-        <span class="slot-label">正面</span>
-        <img id="img-front" alt="" />
-        <div class="no-img" id="no-front">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
-          </svg>
-          画像は未準備です
-        </div>
-      </div>
-      <div class="img-slot md">
-        <span class="slot-label">真後ろ</span>
-        <img id="img-rear" alt="" />
-        <div class="no-img" id="no-rear">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
-          </svg>
-          画像は未準備です
-        </div>
+    <div class="img-slot">
+      <img id="img-rg" alt="" />
+      <div class="no-img" id="no-rg">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
+        </svg>
+        画像は未準備です
       </div>
     </div>
-
-    <div class="meta">
-      <span class="meta-label" id="meta-label"></span>
-      <span class="badge" id="meta-badge"></span>
-    </div>
-
   </div>
 
 </div>
 
 <script>
-const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白' };
+const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白', rg: 'パネルなし' };
 
-const POS_LABELS = {
-  'パネルなし':                'パネルなし',
-  'ルーフのみ':                'ルーフのみ',
-  'ルーフプラスボンネット':     'ルーフ＋ボンネット',
-  'ルーフプラスリアガラス':     'ルーフ＋リアガラス',
-  'ルーフボンネットリアガラス': 'ルーフ＋ボンネット＋リアガラス',
-};
-
-// sfx: 斜め上メイン画像のカラー接尾辞 / sfxSub: リアガラス・正面・真後ろ用
 const C = {
-  RAV4:    { メインカラー1: { label: 'カラー1（アーバンカーキー）',      dot: '#7a8c5e', sfx: '_アーバンカーキー', sfxSub: '_カーキー' },
-              メインカラー2: { label: 'カラー2（レッドマイカ）',          dot: '#c0392b', sfx: '_レッドマイカ' } },
-  RX:      { メインカラー1: { label: 'カラー1（ソニックカッパー）',       dot: '#b87333', sfx: '_ソニックカッパー' },
-              メインカラー2: { label: 'カラー2（ブルーマイカ）',          dot: '#2980b9', sfx: '_ブルーマイカ' } },
-  サクラ:   { メインカラー1: { label: 'カラー1（ソルベブルー）',          dot: '#5b9bd5', sfx: '_ソルベブルー' },
-              メインカラー2: { label: 'カラー2（スパークリングレッド）',   dot: '#cc2200', sfx: '_スパークリングレッド' } },
-  プリウス: { メインカラー1: { label: 'カラー1',                         dot: '#888',    sfx: '' },
-              メインカラー2: { label: 'カラー2',                         dot: '#888',    sfx: '' } },
+  RAV4:    { メインカラー1: { dot: '#7a8c5e', sfx: '_アーバンカーキー', sfxSub: '_カーキー' },
+              メインカラー2: { dot: '#c0392b', sfx: '_レッドマイカ' } },
+  RX:      { メインカラー1: { dot: '#b87333', sfx: '_ソニックカッパー' },
+              メインカラー2: { dot: '#2980b9', sfx: '_ブルーマイカ' } },
+  サクラ:   { メインカラー1: { dot: '#5b9bd5', sfx: '_ソルベブルー' },
+              メインカラー2: { dot: '#cc2200', sfx: '_スパークリングレッド' } },
+  プリウス: { メインカラー1: { dot: '#888', sfx: '' },
+              メインカラー2: { dot: '#888', sfx: '' } },
 };
 
 function getSfx(car, color, isMain) {
@@ -285,62 +257,35 @@ function mainPath() {
 }
 
 function rgPath() {
-  const { car, pos, color } = state;
-  const hasPanel = pos === 'ルーフプラスリアガラス' || pos === 'ルーフボンネットリアガラス';
-  if (!hasPanel) return `${car}/${car}_リアガラス_パネル無し_白.png`;
+  const { car, color, rg } = state;
+  if (rg === 'パネルなし') return `${car}/${car}_リアガラス_パネル無し_白.png`;
   return `${car}/${car}_リアガラス_パネルあり_${color}${getSfx(car, color, false)}.png`;
 }
 
-function frontPath() {
-  const { car, pos, color } = state;
-  const hasBonnet = pos === 'ルーフプラスボンネット' || pos === 'ルーフボンネットリアガラス';
-  if (!hasBonnet) return `${car}/${car}_正面_パネル無し_${color}.png`;
-  return `${car}/${car}_正面_ボンネット＋ルーフ_${color}${getSfx(car, color, false)}.png`;
-}
-
-function rearPath() {
-  const { car, pos, color } = state;
-  const hasRearGlass = pos === 'ルーフプラスリアガラス' || pos === 'ルーフボンネットリアガラス';
-  if (!hasRearGlass) return `${car}/${car}_真後ろ_パネル無し_白.png`;
-  return `${car}/${car}_真後ろ_リアガラスあり_${color}${getSfx(car, color, false)}.png`;
-}
-
-function colorLabel() {
-  const { car, color } = state;
-  return (color === 'メインカラー1' || color === 'メインカラー2') ? (C[car]?.[color]?.label || color) : color;
-}
-
-function load(imgId, noId, src) {
+function load(imgId, noId, src, badgeId) {
   const img = document.getElementById(imgId);
   const no  = document.getElementById(noId);
   img.style.display = 'none'; no.style.display = 'flex';
-  img.onload  = () => { img.style.display = 'block'; no.style.display = 'none'; if (imgId === 'img-main') setBadge(true); };
-  img.onerror = () => { img.style.display = 'none';  no.style.display = 'flex'; if (imgId === 'img-main') setBadge(false); };
+  img.onload  = () => { img.style.display = 'block'; no.style.display = 'none'; if (badgeId) setBadge(badgeId, true); };
+  img.onerror = () => { img.style.display = 'none';  no.style.display = 'flex'; if (badgeId) setBadge(badgeId, false); };
   img.src = src;
 }
 
-function setBadge(ok) {
-  const b = document.getElementById('meta-badge');
+function setBadge(id, ok) {
+  const b = document.getElementById(id);
   b.textContent = ok ? '画像あり' : '未準備';
   b.className = 'badge ' + (ok ? 'badge-ok' : 'badge-ng');
 }
 
 function updateAll() {
-  const { car, pos } = state;
-  const cl = colorLabel();
-  document.getElementById('car-value').textContent  = car;
-  document.getElementById('meta-label').textContent = `${car} ／ ${POS_LABELS[pos]} ／ ${cl}`;
-  load('img-main',  'no-main',  mainPath());
-  load('img-rg',    'no-rg',    rgPath());
-  load('img-front', 'no-front', frontPath());
-  load('img-rear',  'no-rear',  rearPath());
+  document.getElementById('car-value').textContent = state.car;
+  load('img-main', 'no-main', mainPath(), 'badge-main');
+  load('img-rg',   'no-rg',   rgPath(),   null);
 }
 
-function syncColorBtns() {
-  const { car } = state;
-  [['1','メインカラー1'],['2','メインカラー2']].forEach(([id, key]) => {
-    document.getElementById(`dot-c${id}`).style.background = C[car]?.[key]?.dot || '#888';
-    document.getElementById(`lbl-c${id}`).textContent      = C[car]?.[key]?.label || key;
+function syncColorDots() {
+  ['メインカラー1', 'メインカラー2'].forEach((key, i) => {
+    document.getElementById(`dot-c${i+1}`).style.background = C[state.car]?.[key]?.dot || '#888';
   });
 }
 
@@ -348,30 +293,35 @@ function toggleCarDrop() {
   document.getElementById('car-dropdown').classList.toggle('open');
 }
 
+document.addEventListener('click', e => {
+  if (!document.getElementById('car-wrap').contains(e.target))
+    document.getElementById('car-dropdown').classList.remove('open');
+});
+
 function pickCar(val, btn) {
   state.car = val;
   document.querySelectorAll('.car-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('car-dropdown').classList.remove('open');
-  syncColorBtns();
+  syncColorDots();
   updateAll();
 }
 
 function pick(group, val, btn) {
   state[group] = val;
-  document.querySelectorAll(`#opts-${group} .ctrl-btn`).forEach(b => b.classList.remove('active'));
+  document.querySelectorAll(`#opts-${group} button`).forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateAll();
 }
 
-function setView(n, btn) {
-  document.getElementById('view1').classList.toggle('hidden', n !== 1);
-  document.getElementById('view2').classList.toggle('hidden', n !== 2);
-  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+function pickRG(val, btn) {
+  state.rg = val;
+  document.querySelectorAll('.rg-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  load('img-rg', 'no-rg', rgPath(), null);
 }
 
-syncColorBtns();
+syncColorDots();
 updateAll();
 </script>
 </body>
