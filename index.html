@@ -23,10 +23,9 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 .ctrl-bar {
   background: #fff; border-bottom: 1px solid #ddd;
   padding: 10px 16px; flex-shrink: 0;
-  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 20px;
 }
 .divider { width: 1px; height: 28px; background: #e0e0e0; flex-shrink: 0; }
-
 .ctrl-group { display: flex; align-items: center; gap: 8px; }
 .ctrl-label { font-size: 11px; color: #888; white-space: nowrap; }
 
@@ -53,10 +52,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 }
 .parts-btn:hover { background: #f0faf0; }
 .parts-btn.active { background: #3a9a4a; color: #fff; }
-.pip {
-  width: 9px; height: 9px; border-radius: 50%;
-  background: currentColor; flex-shrink: 0;
-}
+.pip { width: 9px; height: 9px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
 /* 車種 */
 .car-wrap { position: relative; }
@@ -104,42 +100,59 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 .color-btn:hover:not(:disabled) { background: #eef2ff; }
 .color-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
 .color-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-.cdot {
-  width: 13px; height: 13px; border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.14); flex-shrink: 0;
-}
+.cdot { width: 13px; height: 13px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.14); flex-shrink: 0; }
 .color-btn.active .cdot { border-color: rgba(255,255,255,0.3); }
 
-/* ── 画像エリア共通 ── */
-.img-area {
+/* ── ビュー1 レイアウト（ワイプ） ── */
+#view1-area {
   flex: 1; min-height: 0;
-  display: grid;
-  gap: 12px; padding: 12px 16px;
+  position: relative;
+  padding: 12px 16px;
 }
-#view1-area { grid-template-columns: 3fr 2fr; }
-#view2-area { grid-template-columns: 1fr 1fr; }
 
-.img-panel {
+/* メイン画像パネル（斜め上）：全体を覆う */
+#panel-main {
+  width: 100%; height: 100%;
+  background: #fff; border-radius: 10px; border: 1px solid #ddd;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+#panel-main.parts-mode { border-color: #3a9a4a; box-shadow: 0 0 0 1.5px #3a9a4a33; }
+
+/* ワイプパネル（リアガラス）：右上に浮かせる */
+#panel-rg {
+  position: absolute;
+  top: 24px; right: 28px;
+  width: 28%; height: 46%;
+  background: #fff; border-radius: 8px;
+  border: 2.5px solid #fff;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.08);
+  overflow: hidden;
+  z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+}
+#panel-rg.parts-mode { border-color: #3a9a4a; box-shadow: 0 6px 24px rgba(58,154,74,0.25), 0 0 0 1px #3a9a4a55; }
+
+/* ── ビュー2 レイアウト（2列グリッド） ── */
+#view2-area {
+  flex: 1; min-height: 0;
+  padding: 12px 16px;
+  gap: 12px;
+}
+
+.v2-panel {
   background: #fff; border-radius: 10px; border: 1px solid #ddd;
   display: flex; flex-direction: column; overflow: hidden; min-height: 0;
 }
-/* パーツカラーON時のパネル枠 */
-.img-panel.parts-mode { border-color: #3a9a4a; box-shadow: 0 0 0 1.5px #3a9a4a22; }
-
 .panel-header {
   padding: 8px 14px; border-bottom: 1px solid #eee; flex-shrink: 0;
   display: flex; justify-content: space-between; align-items: center;
 }
-.panel-title { font-size: 11px; color: #888; letter-spacing: 0.04em; }
-.panel-mode-label {
-  font-size: 10px; color: #3a9a4a; font-weight: 600;
-  background: #e8f5ea; padding: 2px 8px; border-radius: 10px;
-  display: none;
-}
-.parts-mode-on .panel-mode-label { display: inline-block; }
+.panel-title { font-size: 11px; color: #888; }
 
+/* 共通：画像スロット */
 .img-slot {
-  flex: 1; min-height: 0;
+  flex: 1; min-height: 0; width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
   padding: 10px;
 }
@@ -150,7 +163,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 }
 .no-img svg { opacity: 0.25; }
 
-/* トグル（リアガラス・正面共用） */
+/* ビュー2正面トグル */
 .rg-toggle { display: flex; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
 .rg-btn {
   padding: 4px 11px; border: none; background: #fafafa;
@@ -185,7 +198,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
   </div>
 
   <!-- パーツカラーモード（ビュー1専用） -->
-  <div class="ctrl-group" id="ctrl-parts">
+  <div class="ctrl-group">
     <button class="parts-btn" id="parts-toggle" onclick="togglePartsColor()">
       <span class="pip"></span>パーツカラー
     </button>
@@ -218,7 +231,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
     <div class="seg" id="opts-pos">
       <button class="seg-btn" onclick="pick('pos','パネルなし',this)">なし</button>
       <button class="seg-btn active" onclick="pick('pos','ルーフのみ',this)">ルーフ</button>
-      <button class="seg-btn" id="pos-roof-bonnet" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
+      <button class="seg-btn" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
     </div>
   </div>
   <div class="divider" id="div-pos"></div>
@@ -233,10 +246,10 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
       <button class="color-btn" onclick="pick('color','黒',this)">
         <span class="cdot" style="background:#222;"></span>黒
       </button>
-      <button class="color-btn" id="color-c1" onclick="pick('color','メインカラー1',this)">
+      <button class="color-btn" onclick="pick('color','メインカラー1',this)">
         <span class="cdot" id="dot-c1" style="background:#7a8c5e;"></span>カラー1
       </button>
-      <button class="color-btn" id="color-c2" onclick="pick('color','メインカラー2',this)">
+      <button class="color-btn" onclick="pick('color','メインカラー2',this)">
         <span class="cdot" id="dot-c2" style="background:#c0392b;"></span>カラー2
       </button>
     </div>
@@ -244,19 +257,15 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 
 </div>
 
-<!-- ビュー1：斜め上 ＋ リアガラス -->
-<div class="img-area" id="view1-area">
+<!-- ビュー1：斜め上（メイン） ＋ リアガラス（ワイプ） -->
+<div id="view1-area">
 
-  <div class="img-panel" id="panel-main">
-    <div class="panel-header">
-      <span class="panel-title">斜め上</span>
-      <span class="panel-mode-label" id="mode-label-main">パーツカラーモード</span>
-      <span class="badge" id="badge-main"></span>
-    </div>
+  <!-- メイン：斜め上 -->
+  <div id="panel-main">
     <div class="img-slot">
       <img id="img-main" alt="" />
       <div class="no-img" id="no-main">
-        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
           <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
         </svg>
         画像は未準備です
@@ -264,22 +273,15 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
     </div>
   </div>
 
-  <div class="img-panel" id="panel-rg">
-    <div class="panel-header">
-      <span class="panel-title" id="rg-panel-title">リアガラス</span>
-      <span class="panel-mode-label" id="mode-label-rg">リアガラス＋ルーフ</span>
-      <div class="rg-toggle" id="rg-main-toggle">
-        <button class="rg-btn active" onclick="pickRG('パネルなし',this)">パネルなし</button>
-        <button class="rg-btn" onclick="pickRG('パネルあり',this)">パネルあり</button>
-      </div>
-    </div>
+  <!-- ワイプ：リアガラス -->
+  <div id="panel-rg">
     <div class="img-slot">
       <img id="img-rg" alt="" />
       <div class="no-img" id="no-rg">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
           <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
         </svg>
-        画像は未準備です
+        未準備
       </div>
     </div>
   </div>
@@ -287,9 +289,9 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 </div>
 
 <!-- ビュー2：正面 ＋ 真後ろ -->
-<div class="img-area" id="view2-area" style="display:none;">
+<div id="view2-area" style="display:none;">
 
-  <div class="img-panel">
+  <div class="v2-panel">
     <div class="panel-header">
       <span class="panel-title">正面</span>
       <div class="rg-toggle">
@@ -308,7 +310,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
     </div>
   </div>
 
-  <div class="img-panel">
+  <div class="v2-panel">
     <div class="panel-header">
       <span class="panel-title">真後ろ</span>
       <span class="badge" id="badge-maushiro"></span>
@@ -316,7 +318,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
     <div class="img-slot">
       <img id="img-maushiro" alt="" />
       <div class="no-img" id="no-maushiro">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
           <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
         </svg>
         画像は未準備です
@@ -329,7 +331,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 <script>
 const state = {
   car: 'RAV4', pos: 'ルーフのみ', color: '白',
-  rg: 'パネルなし', view: 1, shomen: 'ボンネット＋ルーフ',
+  view: 1, shomen: 'ボンネット＋ルーフ',
   partsColor: false
 };
 
@@ -363,10 +365,12 @@ function mainPath() {
 }
 
 function rgPath() {
-  const { car, color, rg } = state;
+  const { car, pos, color } = state;
   if (state.partsColor)
     return `${car}/${car}_リアガラス_パーツカラー_${COLOR_FILE[color]}.png`;
-  if (rg === 'パネルなし') return `${car}/${car}_リアガラス_パネルなし_白.png`;
+  /* パーツ設置位置に連動して自動切替 */
+  if (pos === 'パネルなし')
+    return `${car}/${car}_リアガラス_パネルなし_白.png`;
   return `${car}/${car}_リアガラス_パネルあり_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
 }
 
@@ -381,18 +385,14 @@ function maushiroPath() {
 }
 
 /* ── 画像ロード ── */
-function load(imgId, noId, src, badgeId) {
+function load(imgId, noId, src) {
   const img = document.getElementById(imgId);
   const no  = document.getElementById(noId);
   img.onload = img.onerror = null;
   img.style.display = 'none'; no.style.display = 'flex';
-  img.onload  = () => { img.style.display = 'block'; no.style.display = 'none'; if (badgeId) setBadge(badgeId, true); };
-  img.onerror = () => { img.style.display = 'none';  no.style.display = 'flex'; if (badgeId) setBadge(badgeId, false); };
+  img.onload  = () => { img.style.display = 'block'; no.style.display = 'none'; };
+  img.onerror = () => { img.style.display = 'none';  no.style.display = 'flex'; };
   img.src = src;
-}
-
-function loadMaushiro() {
-  load('img-maushiro', 'no-maushiro', maushiroPath(), 'badge-maushiro');
 }
 
 function setBadge(id, ok) {
@@ -405,11 +405,17 @@ function setBadge(id, ok) {
 function updateAll() {
   document.getElementById('car-value').textContent = state.car;
   if (state.view === 1) {
-    load('img-main', 'no-main', mainPath(), 'badge-main');
-    load('img-rg',   'no-rg',   rgPath(),   null);
+    load('img-main', 'no-main', mainPath());
+    load('img-rg',   'no-rg',   rgPath());
   } else {
-    load('img-shomen', 'no-shomen', shomenPath(), null);
-    loadMaushiro();
+    load('img-shomen', 'no-shomen', shomenPath());
+    const img = document.getElementById('img-maushiro');
+    const no  = document.getElementById('no-maushiro');
+    img.onload = img.onerror = null;
+    img.style.display = 'none'; no.style.display = 'flex';
+    img.onload  = () => { img.style.display = 'block'; no.style.display = 'none'; setBadge('badge-maushiro', true); };
+    img.onerror = () => { img.style.display = 'none';  no.style.display = 'flex'; setBadge('badge-maushiro', false); };
+    img.src = maushiroPath();
   }
 }
 
@@ -423,64 +429,50 @@ function togglePartsColor() {
 function applyPartsColorMode() {
   const on = state.partsColor;
 
-  // ボタン外観
   document.getElementById('parts-toggle').classList.toggle('active', on);
 
-  // ビュー2タブ無効化
+  /* ビュー2無効 */
   const v2tab = document.getElementById('view2-tab');
   v2tab.disabled = on;
   if (on && state.view === 2) {
     state.view = 1;
     document.getElementById('view2-area').style.display = 'none';
-    document.getElementById('view1-area').style.display = 'grid';
+    document.getElementById('view1-area').style.display = 'block';
     document.getElementById('view1-tab').classList.add('active');
     v2tab.classList.remove('active');
     document.getElementById('ctrl-pos').style.display = 'flex';
     document.getElementById('div-pos').style.display = '';
   }
 
-  // パーツ設置位置：ルーフ＋ボンネット固定
+  /* パーツ設置位置：ルーフ＋ボンネット固定 */
   document.querySelectorAll('#opts-pos .seg-btn').forEach((b, i) => {
-    if (on) {
-      b.disabled = (i !== 2);
-      b.classList.toggle('active', i === 2);
-      if (i === 2) state.pos = 'ルーフプラスボンネット';
-    } else {
-      b.disabled = false;
-    }
+    b.disabled = on && i !== 2;
+    if (on) b.classList.toggle('active', i === 2);
   });
+  if (on) state.pos = 'ルーフプラスボンネット';
 
-  // ボディカラー：白/黒のみ
+  /* カラー：白/黒のみ */
   if (on && state.color !== '白' && state.color !== '黒') {
     state.color = '白';
-    document.querySelectorAll('#opts-color .color-btn').forEach((b, i) => {
-      b.classList.toggle('active', i === 0);
-    });
+    document.querySelectorAll('#opts-color .color-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
   }
   document.querySelectorAll('#opts-color .color-btn').forEach((b, i) => {
-    if (on) b.disabled = (i >= 2);
-    else b.disabled = false;
+    b.disabled = on && i >= 2;
   });
 
-  // リアガラスパネルのトグル表示・パネル枠
-  document.getElementById('rg-main-toggle').style.visibility = on ? 'hidden' : '';
-  ['panel-main', 'panel-rg'].forEach(id => {
-    document.getElementById(id).classList.toggle('parts-mode', on);
-  });
-  // モードラベル
-  document.querySelectorAll('.panel-header').forEach(h => {
-    h.classList.toggle('parts-mode-on', on);
-  });
+  /* パネル枠色 */
+  document.getElementById('panel-main').classList.toggle('parts-mode', on);
+  document.getElementById('panel-rg').classList.toggle('parts-mode', on);
 }
 
 /* ── ビュー切替 ── */
 function switchView(v, btn) {
   if (v === 2 && state.partsColor) return;
   state.view = v;
-  document.getElementById('view1-area').style.display = v === 1 ? 'grid' : 'none';
-  document.getElementById('view2-area').style.display = v === 2 ? 'grid' : 'none';
-  document.getElementById('ctrl-pos').style.display   = v === 1 ? 'flex' : 'none';
-  document.getElementById('div-pos').style.display    = v === 1 ? ''     : 'none';
+  document.getElementById('view1-area').style.display = v === 1 ? 'block' : 'none';
+  document.getElementById('view2-area').style.display = v === 2 ? 'grid'  : 'none';
+  document.getElementById('ctrl-pos').style.display   = v === 1 ? 'flex'  : 'none';
+  document.getElementById('div-pos').style.display    = v === 1 ? ''      : 'none';
   document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateAll();
@@ -520,21 +512,17 @@ function pick(group, val, btn) {
   updateAll();
 }
 
-/* ── リアガラストグル ── */
-function pickRG(val, btn) {
-  state.rg = val;
-  document.querySelectorAll('#rg-main-toggle .rg-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  load('img-rg', 'no-rg', rgPath(), null);
-}
-
-/* ── 正面ポジション ── */
+/* ── 正面ポジション（ビュー2） ── */
 function pickShomen(val, btn) {
   state.shomen = val;
   btn.closest('.rg-toggle').querySelectorAll('.rg-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  load('img-shomen', 'no-shomen', shomenPath(), null);
+  load('img-shomen', 'no-shomen', shomenPath());
 }
+
+/* ── ビュー2グリッドをCSS側で設定 ── */
+document.getElementById('view2-area').style.display = 'none';
+document.getElementById('view2-area').style.gridTemplateColumns = '1fr 1fr';
 
 syncColorDots();
 updateAll();
