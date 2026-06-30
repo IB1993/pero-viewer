@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>太陽光発電パーツ搭載車両ビューア</title>
+<title>mobility viewer</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; }
@@ -144,7 +144,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 <body>
 
 <header>
-  <h1>太陽光発電パーツ搭載車両ビューア</h1>
+  <h1>mobility viewer</h1>
 </header>
 
 <div class="ctrl-bar">
@@ -258,8 +258,8 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
     <div class="panel-header">
       <span class="panel-title">正面</span>
       <div class="rg-toggle">
-        <button class="rg-btn active" onclick="pickShomen('パネルなし',this)">パネルなし</button>
-        <button class="rg-btn" onclick="pickShomen('ボンネット＋ルーフ',this)">ボンネット＋ルーフ</button>
+        <button class="rg-btn" onclick="pickShomen('パネルなし',this)">パネルなし</button>
+        <button class="rg-btn active" onclick="pickShomen('ボンネット＋ルーフ',this)">ボンネット＋ルーフ</button>
       </div>
     </div>
     <div class="img-slot">
@@ -292,7 +292,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 </div>
 
 <script>
-const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白', rg: 'パネルなし', view: 1, shomen: 'パネルなし' };
+const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白', rg: 'パネルなし', view: 1, shomen: 'ボンネット＋ルーフ' };
 
 const C = {
   RAV4:    { メインカラー1: { dot: '#7a8c5e', sfx: '_アーバンカーキー', sfxSub: '_カーキー' },
@@ -331,9 +331,9 @@ function shomenPath() {
   return `${car}/${car}_正面_${shomen}_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
 }
 
-function maushiroPath(pos) {
+function maushiroPath() {
   const { car, color } = state;
-  return `${car}/${car}_真後ろ_${pos}_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
+  return `${car}/${car}_真後ろ_パネル有りなし併用_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
 }
 
 /* 画像ロード */
@@ -347,21 +347,8 @@ function load(imgId, noId, src, badgeId) {
   img.src = src;
 }
 
-/* 真後ろ：リアガラスあり → パネルなし の順でフォールバック */
 function loadMaushiro() {
-  const img = document.getElementById('img-maushiro');
-  const no  = document.getElementById('no-maushiro');
-  img.onload = img.onerror = null;
-  img.style.display = 'none'; no.style.display = 'flex';
-  const primary  = maushiroPath('リアガラスあり');
-  const fallback = maushiroPath('パネルなし');
-  img.onerror = () => {
-    img.onerror = () => { img.style.display = 'none'; no.style.display = 'flex'; setBadge('badge-maushiro', false); };
-    img.onload  = () => { img.style.display = 'block'; no.style.display = 'none'; setBadge('badge-maushiro', true); };
-    img.src = fallback;
-  };
-  img.onload = () => { img.style.display = 'block'; no.style.display = 'none'; setBadge('badge-maushiro', true); };
-  img.src = primary;
+  load('img-maushiro', 'no-maushiro', maushiroPath(), 'badge-maushiro');
 }
 
 function setBadge(id, ok) {
