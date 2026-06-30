@@ -473,7 +473,7 @@ function applyPartsColorMode() {
 function switchView(v, btn) {
   if (v === 2 && state.partsColor) return;
   state.view = v;
-  document.getElementById('view1-area').style.display = v === 1 ? 'block' : 'none';
+  document.getElementById('view1-area').style.display = v === 1 ? 'flex' : 'none';
   document.getElementById('view2-area').style.display = v === 2 ? 'grid'  : 'none';
   document.getElementById('ctrl-pos').style.display   = v === 1 ? 'flex'  : 'none';
   document.getElementById('div-pos').style.display    = v === 1 ? ''      : 'none';
