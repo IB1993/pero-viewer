@@ -30,6 +30,17 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 .ctrl-group { display: flex; align-items: center; gap: 8px; }
 .ctrl-label { font-size: 11px; color: #888; white-space: nowrap; }
 
+/* ビュータブ */
+.view-tabs { display: flex; border: 1px solid #c0c0d0; border-radius: 7px; overflow: hidden; }
+.view-tab {
+  padding: 6px 18px; border: none; background: #fafafa;
+  font-size: 13px; cursor: pointer; color: #555;
+  border-right: 1px solid #ddd; font-weight: 500;
+}
+.view-tab:last-child { border-right: none; }
+.view-tab:hover { background: #eef2ff; }
+.view-tab.active { background: #1a1a2e; color: #fff; }
+
 /* 車種 */
 .car-wrap { position: relative; }
 .car-display { display: flex; align-items: center; gap: 8px; }
@@ -79,12 +90,14 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 }
 .color-btn.active .cdot { border-color: rgba(255,255,255,0.3); }
 
-/* ── 画像エリア ── */
+/* ── 画像エリア共通 ── */
 .img-area {
   flex: 1; min-height: 0;
-  display: grid; grid-template-columns: 3fr 2fr;
+  display: grid;
   gap: 12px; padding: 12px 16px;
 }
+#view1-area { grid-template-columns: 3fr 2fr; }
+#view2-area { grid-template-columns: 1fr 1fr; }
 
 .img-panel {
   background: #fff; border-radius: 10px; border: 1px solid #ddd;
@@ -111,7 +124,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 }
 .no-img svg { opacity: 0.25; }
 
-/* リアガラスのパネルあり/なしトグル */
+/* トグル（リアガラス・正面ポジション共用） */
 .rg-toggle { display: flex; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
 .rg-btn {
   padding: 4px 11px; border: none; background: #fafafa;
@@ -136,6 +149,17 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 
 <div class="ctrl-bar">
 
+  <!-- ビュー切替 -->
+  <div class="ctrl-group">
+    <span class="ctrl-label">ビュー</span>
+    <div class="view-tabs">
+      <button class="view-tab active" onclick="switchView(1,this)">ビュー1</button>
+      <button class="view-tab" onclick="switchView(2,this)">ビュー2</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
   <!-- 車種 -->
   <div class="ctrl-group">
     <span class="ctrl-label">車種</span>
@@ -155,8 +179,8 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 
   <div class="divider"></div>
 
-  <!-- パーツ設置位置 -->
-  <div class="ctrl-group">
+  <!-- パーツ設置位置（ビュー1のみ表示） -->
+  <div class="ctrl-group" id="ctrl-pos">
     <span class="ctrl-label">パーツ設置位置</span>
     <div class="seg" id="opts-pos">
       <button class="seg-btn" onclick="pick('pos','パネルなし',this)">なし</button>
@@ -164,8 +188,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
       <button class="seg-btn" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
     </div>
   </div>
-
-  <div class="divider"></div>
+  <div class="divider" id="div-pos"></div>
 
   <!-- ボディカラー -->
   <div class="ctrl-group">
@@ -188,10 +211,9 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 
 </div>
 
-<!-- 画像エリア -->
-<div class="img-area">
+<!-- ビュー1：斜め上 ＋ リアガラス -->
+<div class="img-area" id="view1-area">
 
-  <!-- 左：斜め上 -->
   <div class="img-panel">
     <div class="panel-header">
       <span class="panel-title">斜め上</span>
@@ -208,7 +230,6 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
     </div>
   </div>
 
-  <!-- 右：リアガラス -->
   <div class="img-panel">
     <div class="panel-header">
       <span class="panel-title">リアガラス</span>
@@ -230,8 +251,48 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 
 </div>
 
+<!-- ビュー2：正面 ＋ 真後ろ -->
+<div class="img-area" id="view2-area" style="display:none;">
+
+  <div class="img-panel">
+    <div class="panel-header">
+      <span class="panel-title">正面</span>
+      <div class="rg-toggle">
+        <button class="rg-btn active" onclick="pickShomen('パネルなし',this)">パネルなし</button>
+        <button class="rg-btn" onclick="pickShomen('ボンネット＋ルーフ',this)">ボンネット＋ルーフ</button>
+      </div>
+    </div>
+    <div class="img-slot">
+      <img id="img-shomen" alt="" />
+      <div class="no-img" id="no-shomen">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
+        </svg>
+        画像は未準備です
+      </div>
+    </div>
+  </div>
+
+  <div class="img-panel">
+    <div class="panel-header">
+      <span class="panel-title">真後ろ</span>
+      <span class="badge" id="badge-maushiro"></span>
+    </div>
+    <div class="img-slot">
+      <img id="img-maushiro" alt="" />
+      <div class="no-img" id="no-maushiro">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
+        </svg>
+        画像は未準備です
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <script>
-const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白', rg: 'パネルなし' };
+const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白', rg: 'パネルなし', view: 1, shomen: 'パネルなし' };
 
 const C = {
   RAV4:    { メインカラー1: { dot: '#7a8c5e', sfx: '_アーバンカーキー', sfxSub: '_カーキー' },
@@ -251,48 +312,91 @@ function getSfx(car, color, isMain) {
   return (!isMain && info.sfxSub) ? info.sfxSub : (info.sfx || '');
 }
 
-const POS_FILE  = { 'パネルなし': 'なし', 'ルーフのみ': 'ルーフ', 'ルーフプラスボンネット': 'ルーフ＋ボンネット' };
+const POS_FILE   = { 'パネルなし': 'なし', 'ルーフのみ': 'ルーフ', 'ルーフプラスボンネット': 'ルーフ＋ボンネット' };
 const COLOR_FILE = { '白': '白', '黒': '黒', 'メインカラー1': 'カラー1', 'メインカラー2': 'カラー2' };
 
 function mainPath() {
   const { car, pos, color } = state;
-  const pf = POS_FILE[pos];
-  const cf = COLOR_FILE[color];
-  return `${car}/${car}_斜め上_${pf}_${cf}${getSfx(car, color, true)}.png`;
+  return `${car}/${car}_斜め上_${POS_FILE[pos]}_${COLOR_FILE[color]}${getSfx(car, color, true)}.png`;
 }
 
 function rgPath() {
   const { car, color, rg } = state;
   if (rg === 'パネルなし') return `${car}/${car}_リアガラス_パネルなし_白.png`;
-  const cf = COLOR_FILE[color];
-  return `${car}/${car}_リアガラス_パネルあり_${cf}${getSfx(car, color, false)}.png`;
+  return `${car}/${car}_リアガラス_パネルあり_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
 }
 
+function shomenPath() {
+  const { car, color, shomen } = state;
+  return `${car}/${car}_正面_${shomen}_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
+}
+
+function maushiroPath(pos) {
+  const { car, color } = state;
+  return `${car}/${car}_真後ろ_${pos}_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
+}
+
+/* 画像ロード */
 function load(imgId, noId, src, badgeId) {
   const img = document.getElementById(imgId);
   const no  = document.getElementById(noId);
+  img.onload = img.onerror = null;
   img.style.display = 'none'; no.style.display = 'flex';
   img.onload  = () => { img.style.display = 'block'; no.style.display = 'none'; if (badgeId) setBadge(badgeId, true); };
   img.onerror = () => { img.style.display = 'none';  no.style.display = 'flex'; if (badgeId) setBadge(badgeId, false); };
   img.src = src;
 }
 
+/* 真後ろ：リアガラスあり → パネルなし の順でフォールバック */
+function loadMaushiro() {
+  const img = document.getElementById('img-maushiro');
+  const no  = document.getElementById('no-maushiro');
+  img.onload = img.onerror = null;
+  img.style.display = 'none'; no.style.display = 'flex';
+  const primary  = maushiroPath('リアガラスあり');
+  const fallback = maushiroPath('パネルなし');
+  img.onerror = () => {
+    img.onerror = () => { img.style.display = 'none'; no.style.display = 'flex'; setBadge('badge-maushiro', false); };
+    img.onload  = () => { img.style.display = 'block'; no.style.display = 'none'; setBadge('badge-maushiro', true); };
+    img.src = fallback;
+  };
+  img.onload = () => { img.style.display = 'block'; no.style.display = 'none'; setBadge('badge-maushiro', true); };
+  img.src = primary;
+}
+
 function setBadge(id, ok) {
   const b = document.getElementById(id);
+  if (!b) return;
   b.textContent = ok ? '画像あり' : '未準備';
   b.className = 'badge ' + (ok ? 'badge-ok' : 'badge-ng');
 }
 
 function updateAll() {
   document.getElementById('car-value').textContent = state.car;
-  load('img-main', 'no-main', mainPath(), 'badge-main');
-  load('img-rg',   'no-rg',   rgPath(),   null);
+  if (state.view === 1) {
+    load('img-main', 'no-main', mainPath(), 'badge-main');
+    load('img-rg',   'no-rg',   rgPath(),   null);
+  } else {
+    load('img-shomen', 'no-shomen', shomenPath(), null);
+    loadMaushiro();
+  }
 }
 
 function syncColorDots() {
-  ['メインカラー1', 'メインカラー2'].forEach((key, i) => {
+  ['メインカラー1','メインカラー2'].forEach((key, i) => {
     document.getElementById(`dot-c${i+1}`).style.background = C[state.car]?.[key]?.dot || '#888';
   });
+}
+
+function switchView(v, btn) {
+  state.view = v;
+  document.getElementById('view1-area').style.display = v === 1 ? 'grid' : 'none';
+  document.getElementById('view2-area').style.display = v === 2 ? 'grid' : 'none';
+  document.getElementById('ctrl-pos').style.display   = v === 1 ? 'flex' : 'none';
+  document.getElementById('div-pos').style.display    = v === 1 ? ''     : 'none';
+  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateAll();
 }
 
 function toggleCarDrop() {
@@ -325,6 +429,14 @@ function pickRG(val, btn) {
   document.querySelectorAll('.rg-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   load('img-rg', 'no-rg', rgPath(), null);
+}
+
+function pickShomen(val, btn) {
+  state.shomen = val;
+  /* 正面パネル内のトグルボタンのみリセット */
+  btn.closest('.rg-toggle').querySelectorAll('.rg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  load('img-shomen', 'no-shomen', shomenPath(), null);
 }
 
 syncColorDots();
