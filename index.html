@@ -23,7 +23,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 .ctrl-bar {
   background: #fff; border-bottom: 1px solid #ddd;
   padding: 10px 16px; flex-shrink: 0;
-  display: flex; align-items: center; gap: 20px;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
 }
 .divider { width: 1px; height: 28px; background: #e0e0e0; flex-shrink: 0; }
 
@@ -36,10 +36,27 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
   padding: 6px 18px; border: none; background: #fafafa;
   font-size: 13px; cursor: pointer; color: #555;
   border-right: 1px solid #ddd; font-weight: 500;
+  transition: opacity 0.15s;
 }
 .view-tab:last-child { border-right: none; }
-.view-tab:hover { background: #eef2ff; }
+.view-tab:hover:not(:disabled) { background: #eef2ff; }
 .view-tab.active { background: #1a1a2e; color: #fff; }
+.view-tab:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* パーツカラーモードボタン */
+.parts-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 14px; border-radius: 7px;
+  border: 1.5px solid #3a9a4a; background: #fff;
+  font-size: 13px; cursor: pointer; color: #3a9a4a; font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+.parts-btn:hover { background: #f0faf0; }
+.parts-btn.active { background: #3a9a4a; color: #fff; }
+.pip {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: currentColor; flex-shrink: 0;
+}
 
 /* 車種 */
 .car-wrap { position: relative; }
@@ -64,16 +81,17 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 .car-btn:hover { background: #eef2ff; }
 .car-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
 
-/* セグメントボタン（設置位置） */
+/* セグメントボタン */
 .seg { display: flex; border: 1px solid #ddd; border-radius: 7px; overflow: hidden; }
 .seg-btn {
   padding: 6px 14px; border: none; background: #fafafa;
   font-size: 13px; cursor: pointer; color: #555;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #ddd; transition: opacity 0.15s;
 }
 .seg-btn:last-child { border-right: none; }
-.seg-btn:hover { background: #eef2ff; }
+.seg-btn:hover:not(:disabled) { background: #eef2ff; }
 .seg-btn.active { background: #1a1a2e; color: #fff; }
+.seg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* カラーボタン */
 .color-btns { display: flex; gap: 5px; }
@@ -81,9 +99,11 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
   display: flex; align-items: center; gap: 5px;
   padding: 5px 11px; border-radius: 7px; border: 1px solid #ddd;
   background: #fafafa; font-size: 13px; cursor: pointer; color: #333;
+  transition: opacity 0.15s;
 }
-.color-btn:hover { background: #eef2ff; }
+.color-btn:hover:not(:disabled) { background: #eef2ff; }
 .color-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+.color-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .cdot {
   width: 13px; height: 13px; border-radius: 50%;
   border: 1px solid rgba(0,0,0,0.14); flex-shrink: 0;
@@ -103,28 +123,34 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
   background: #fff; border-radius: 10px; border: 1px solid #ddd;
   display: flex; flex-direction: column; overflow: hidden; min-height: 0;
 }
+/* パーツカラーON時のパネル枠 */
+.img-panel.parts-mode { border-color: #3a9a4a; box-shadow: 0 0 0 1.5px #3a9a4a22; }
+
 .panel-header {
   padding: 8px 14px; border-bottom: 1px solid #eee; flex-shrink: 0;
   display: flex; justify-content: space-between; align-items: center;
 }
 .panel-title { font-size: 11px; color: #888; letter-spacing: 0.04em; }
+.panel-mode-label {
+  font-size: 10px; color: #3a9a4a; font-weight: 600;
+  background: #e8f5ea; padding: 2px 8px; border-radius: 10px;
+  display: none;
+}
+.parts-mode-on .panel-mode-label { display: inline-block; }
 
 .img-slot {
   flex: 1; min-height: 0;
   display: flex; align-items: center; justify-content: center;
   padding: 10px;
 }
-.img-slot img {
-  max-width: 100%; max-height: 100%;
-  object-fit: contain; display: none;
-}
+.img-slot img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
 .no-img {
   display: flex; flex-direction: column; align-items: center;
   gap: 10px; color: #ccc; font-size: 12px;
 }
 .no-img svg { opacity: 0.25; }
 
-/* トグル（リアガラス・正面ポジション共用） */
+/* トグル（リアガラス・正面共用） */
 .rg-toggle { display: flex; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
 .rg-btn {
   padding: 4px 11px; border: none; background: #fafafa;
@@ -153,9 +179,16 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
   <div class="ctrl-group">
     <span class="ctrl-label">ビュー</span>
     <div class="view-tabs">
-      <button class="view-tab active" onclick="switchView(1,this)">ビュー1</button>
-      <button class="view-tab" onclick="switchView(2,this)">ビュー2</button>
+      <button class="view-tab active" id="view1-tab" onclick="switchView(1,this)">ビュー1</button>
+      <button class="view-tab" id="view2-tab" onclick="switchView(2,this)">ビュー2</button>
     </div>
+  </div>
+
+  <!-- パーツカラーモード（ビュー1専用） -->
+  <div class="ctrl-group" id="ctrl-parts">
+    <button class="parts-btn" id="parts-toggle" onclick="togglePartsColor()">
+      <span class="pip"></span>パーツカラー
+    </button>
   </div>
 
   <div class="divider"></div>
@@ -179,13 +212,13 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 
   <div class="divider"></div>
 
-  <!-- パーツ設置位置（ビュー1のみ表示） -->
+  <!-- パーツ設置位置（ビュー1のみ） -->
   <div class="ctrl-group" id="ctrl-pos">
     <span class="ctrl-label">パーツ設置位置</span>
     <div class="seg" id="opts-pos">
       <button class="seg-btn" onclick="pick('pos','パネルなし',this)">なし</button>
       <button class="seg-btn active" onclick="pick('pos','ルーフのみ',this)">ルーフ</button>
-      <button class="seg-btn" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
+      <button class="seg-btn" id="pos-roof-bonnet" onclick="pick('pos','ルーフプラスボンネット',this)">ルーフ＋ボンネット</button>
     </div>
   </div>
   <div class="divider" id="div-pos"></div>
@@ -200,10 +233,10 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
       <button class="color-btn" onclick="pick('color','黒',this)">
         <span class="cdot" style="background:#222;"></span>黒
       </button>
-      <button class="color-btn" onclick="pick('color','メインカラー1',this)">
+      <button class="color-btn" id="color-c1" onclick="pick('color','メインカラー1',this)">
         <span class="cdot" id="dot-c1" style="background:#7a8c5e;"></span>カラー1
       </button>
-      <button class="color-btn" onclick="pick('color','メインカラー2',this)">
+      <button class="color-btn" id="color-c2" onclick="pick('color','メインカラー2',this)">
         <span class="cdot" id="dot-c2" style="background:#c0392b;"></span>カラー2
       </button>
     </div>
@@ -214,9 +247,10 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 <!-- ビュー1：斜め上 ＋ リアガラス -->
 <div class="img-area" id="view1-area">
 
-  <div class="img-panel">
+  <div class="img-panel" id="panel-main">
     <div class="panel-header">
       <span class="panel-title">斜め上</span>
+      <span class="panel-mode-label" id="mode-label-main">パーツカラーモード</span>
       <span class="badge" id="badge-main"></span>
     </div>
     <div class="img-slot">
@@ -230,10 +264,11 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
     </div>
   </div>
 
-  <div class="img-panel">
+  <div class="img-panel" id="panel-rg">
     <div class="panel-header">
-      <span class="panel-title">リアガラス</span>
-      <div class="rg-toggle">
+      <span class="panel-title" id="rg-panel-title">リアガラス</span>
+      <span class="panel-mode-label" id="mode-label-rg">リアガラス＋ルーフ</span>
+      <div class="rg-toggle" id="rg-main-toggle">
         <button class="rg-btn active" onclick="pickRG('パネルなし',this)">パネルなし</button>
         <button class="rg-btn" onclick="pickRG('パネルあり',this)">パネルあり</button>
       </div>
@@ -292,7 +327,11 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 </div>
 
 <script>
-const state = { car: 'RAV4', pos: 'ルーフのみ', color: '白', rg: 'パネルなし', view: 1, shomen: 'ボンネット＋ルーフ' };
+const state = {
+  car: 'RAV4', pos: 'ルーフのみ', color: '白',
+  rg: 'パネルなし', view: 1, shomen: 'ボンネット＋ルーフ',
+  partsColor: false
+};
 
 const C = {
   RAV4:    { メインカラー1: { dot: '#7a8c5e', sfx: '_アーバンカーキー', sfxSub: '_カーキー' },
@@ -315,13 +354,18 @@ function getSfx(car, color, isMain) {
 const POS_FILE   = { 'パネルなし': 'なし', 'ルーフのみ': 'ルーフ', 'ルーフプラスボンネット': 'ルーフ＋ボンネット' };
 const COLOR_FILE = { '白': '白', '黒': '黒', 'メインカラー1': 'カラー1', 'メインカラー2': 'カラー2' };
 
+/* ── パス生成 ── */
 function mainPath() {
   const { car, pos, color } = state;
+  if (state.partsColor)
+    return `${car}/${car}_斜め上_ルーフ＋ボンネット_${COLOR_FILE[color]}_パーツカラー.png`;
   return `${car}/${car}_斜め上_${POS_FILE[pos]}_${COLOR_FILE[color]}${getSfx(car, color, true)}.png`;
 }
 
 function rgPath() {
   const { car, color, rg } = state;
+  if (state.partsColor)
+    return `${car}/${car}_リアガラス_パーツカラー_${COLOR_FILE[color]}.png`;
   if (rg === 'パネルなし') return `${car}/${car}_リアガラス_パネルなし_白.png`;
   return `${car}/${car}_リアガラス_パネルあり_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
 }
@@ -336,7 +380,7 @@ function maushiroPath() {
   return `${car}/${car}_真後ろ_パネル有りなし併用_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
 }
 
-/* 画像ロード */
+/* ── 画像ロード ── */
 function load(imgId, noId, src, badgeId) {
   const img = document.getElementById(imgId);
   const no  = document.getElementById(noId);
@@ -369,13 +413,69 @@ function updateAll() {
   }
 }
 
-function syncColorDots() {
-  ['メインカラー1','メインカラー2'].forEach((key, i) => {
-    document.getElementById(`dot-c${i+1}`).style.background = C[state.car]?.[key]?.dot || '#888';
+/* ── パーツカラーモード ── */
+function togglePartsColor() {
+  state.partsColor = !state.partsColor;
+  applyPartsColorMode();
+  updateAll();
+}
+
+function applyPartsColorMode() {
+  const on = state.partsColor;
+
+  // ボタン外観
+  document.getElementById('parts-toggle').classList.toggle('active', on);
+
+  // ビュー2タブ無効化
+  const v2tab = document.getElementById('view2-tab');
+  v2tab.disabled = on;
+  if (on && state.view === 2) {
+    state.view = 1;
+    document.getElementById('view2-area').style.display = 'none';
+    document.getElementById('view1-area').style.display = 'grid';
+    document.getElementById('view1-tab').classList.add('active');
+    v2tab.classList.remove('active');
+    document.getElementById('ctrl-pos').style.display = 'flex';
+    document.getElementById('div-pos').style.display = '';
+  }
+
+  // パーツ設置位置：ルーフ＋ボンネット固定
+  document.querySelectorAll('#opts-pos .seg-btn').forEach((b, i) => {
+    if (on) {
+      b.disabled = (i !== 2);
+      b.classList.toggle('active', i === 2);
+      if (i === 2) state.pos = 'ルーフプラスボンネット';
+    } else {
+      b.disabled = false;
+    }
+  });
+
+  // ボディカラー：白/黒のみ
+  if (on && state.color !== '白' && state.color !== '黒') {
+    state.color = '白';
+    document.querySelectorAll('#opts-color .color-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === 0);
+    });
+  }
+  document.querySelectorAll('#opts-color .color-btn').forEach((b, i) => {
+    if (on) b.disabled = (i >= 2);
+    else b.disabled = false;
+  });
+
+  // リアガラスパネルのトグル表示・パネル枠
+  document.getElementById('rg-main-toggle').style.visibility = on ? 'hidden' : '';
+  ['panel-main', 'panel-rg'].forEach(id => {
+    document.getElementById(id).classList.toggle('parts-mode', on);
+  });
+  // モードラベル
+  document.querySelectorAll('.panel-header').forEach(h => {
+    h.classList.toggle('parts-mode-on', on);
   });
 }
 
+/* ── ビュー切替 ── */
 function switchView(v, btn) {
+  if (v === 2 && state.partsColor) return;
   state.view = v;
   document.getElementById('view1-area').style.display = v === 1 ? 'grid' : 'none';
   document.getElementById('view2-area').style.display = v === 2 ? 'grid' : 'none';
@@ -384,6 +484,13 @@ function switchView(v, btn) {
   document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateAll();
+}
+
+/* ── 車種 ── */
+function syncColorDots() {
+  ['メインカラー1','メインカラー2'].forEach((key, i) => {
+    document.getElementById(`dot-c${i+1}`).style.background = C[state.car]?.[key]?.dot || '#888';
+  });
 }
 
 function toggleCarDrop() {
@@ -404,23 +511,26 @@ function pickCar(val, btn) {
   updateAll();
 }
 
+/* ── 設置位置 / カラー ── */
 function pick(group, val, btn) {
+  if (btn.disabled) return;
   state[group] = val;
   document.querySelectorAll(`#opts-${group} button`).forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateAll();
 }
 
+/* ── リアガラストグル ── */
 function pickRG(val, btn) {
   state.rg = val;
-  document.querySelectorAll('.rg-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#rg-main-toggle .rg-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   load('img-rg', 'no-rg', rgPath(), null);
 }
 
+/* ── 正面ポジション ── */
 function pickShomen(val, btn) {
   state.shomen = val;
-  /* 正面パネル内のトグルボタンのみリセット */
   btn.closest('.rg-toggle').querySelectorAll('.rg-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   load('img-shomen', 'no-shomen', shomenPath(), null);
