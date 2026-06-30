@@ -372,8 +372,8 @@ function rgPath() {
   const { car, pos, color } = state;
   if (state.partsColor)
     return `${car}/${car}_リアガラス_パーツカラー_${COLOR_FILE[color]}.png`;
-  /* パーツ設置位置に連動して自動切替 */
-  if (pos === 'パネルなし')
+  /* 白またはパネルなし → パネルなし画像、それ以外 → 色付きパネルあり画像 */
+  if (pos === 'パネルなし' || color === '白')
     return `${car}/${car}_リアガラス_パネルなし_白.png`;
   return `${car}/${car}_リアガラス_パネルあり_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
 }
