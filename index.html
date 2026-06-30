@@ -103,32 +103,33 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 .cdot { width: 13px; height: 13px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.14); flex-shrink: 0; }
 .color-btn.active .cdot { border-color: rgba(255,255,255,0.3); }
 
-/* ── ビュー1 レイアウト（ワイプ） ── */
+/* ── ビュー1 レイアウト（左：メイン ／ 右：ワイプ） ── */
 #view1-area {
   flex: 1; min-height: 0;
-  position: relative;
+  display: flex;
+  gap: 12px;
   padding: 12px 16px;
 }
 
-/* メイン画像パネル（斜め上）：全体を覆う */
+/* メイン画像パネル（斜め上）：左側に広く */
 #panel-main {
-  width: 100%; height: 100%;
+  flex: 1; min-width: 0; height: 100%;
   background: #fff; border-radius: 10px; border: 1px solid #ddd;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
 }
 #panel-main.parts-mode { border-color: #3a9a4a; box-shadow: 0 0 0 1.5px #3a9a4a33; }
 
-/* ワイプパネル（リアガラス）：右上に浮かせる */
+/* ワイプパネル（リアガラス）：右側に小さく */
 #panel-rg {
-  position: absolute;
-  top: 24px; right: 28px;
-  width: 28%; height: 46%;
+  flex-shrink: 0;
+  width: 28%;
+  height: 52%;
+  align-self: flex-start;
   background: #fff; border-radius: 8px;
   border: 2.5px solid #fff;
   box-shadow: 0 6px 24px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.08);
   overflow: hidden;
-  z-index: 10;
   display: flex; align-items: center; justify-content: center;
 }
 #panel-rg.parts-mode { border-color: #3a9a4a; box-shadow: 0 6px 24px rgba(58,154,74,0.25), 0 0 0 1px #3a9a4a55; }
