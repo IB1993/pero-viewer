@@ -107,32 +107,35 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
 #view1-area {
   flex: 1; min-height: 0;
   display: flex;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 0;
+  padding: 0;
+  background: #fff; /* 画像背景色に合わせて白 */
 }
 
-/* メイン画像パネル（斜め上）：左側に広く */
+/* メイン画像パネル（斜め上）：ボーダーなし・背景白 */
 #panel-main {
   flex: 1; min-width: 0; height: 100%;
-  background: #fff; border-radius: 10px; border: 1px solid #ddd;
+  background: #fff;
+  border: none;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
 }
-#panel-main.parts-mode { border-color: #3a9a4a; box-shadow: 0 0 0 1.5px #3a9a4a33; }
+#panel-main.parts-mode { outline: 2px solid #3a9a4a; outline-offset: -2px; }
 
-/* ワイプパネル（リアガラス）：右側に小さく */
+/* ワイプパネル（リアガラス）：右側・薄い影のみで分離 */
 #panel-rg {
   flex-shrink: 0;
-  width: 28%;
-  height: 52%;
+  width: 26%;
+  height: 50%;
   align-self: flex-start;
-  background: #fff; border-radius: 8px;
-  border: 2.5px solid #fff;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.08);
+  background: #fff;
+  border: none;
+  border-left: 1px solid #e8e8e8; /* 左側だけ薄い区切り */
+  box-shadow: -4px 0 12px rgba(0,0,0,0.06);
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
-#panel-rg.parts-mode { border-color: #3a9a4a; box-shadow: 0 6px 24px rgba(58,154,74,0.25), 0 0 0 1px #3a9a4a55; }
+#panel-rg.parts-mode { border-left-color: #3a9a4a44; box-shadow: -4px 0 12px rgba(58,154,74,0.12); }
 
 /* ── ビュー2 レイアウト（2列グリッド） ── */
 #view2-area {
