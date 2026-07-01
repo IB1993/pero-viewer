@@ -108,6 +108,7 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
   flex: 1; min-height: 0;
   display: flex;
   background: #fff;
+  position: relative;
 }
 #panel-main {
   flex: 1; min-width: 0; height: 100%;
@@ -117,6 +118,20 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
   overflow: hidden;
 }
 #panel-main.parts-mode { outline: 2px solid #3a9a4a; outline-offset: -2px; }
+
+/* パーツカラーモード時のリアガラスワイプ（右上角） */
+#panel-rg-parts {
+  display: none;
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 24%; height: 42%;
+  background: #fff;
+  border-radius: 8px;
+  border: 1.5px solid #3a9a4a44;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+#panel-rg-parts.visible { display: flex; align-items: center; justify-content: center; }
 
 /* ── ビュー2 / ビュー3 共通レイアウト（2列グリッド） ── */
 #view2-area, #view3-area {
@@ -262,6 +277,18 @@ header h1 { font-size: 13px; font-weight: normal; letter-spacing: 0.06em; }
       </div>
     </div>
   </div>
+  <!-- パーツカラーモード時のみ表示されるリアガラスワイプ -->
+  <div id="panel-rg-parts">
+    <div class="img-slot" style="padding:6px;">
+      <img id="img-rg-parts" alt="" />
+      <div class="no-img" id="no-rg-parts">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/>
+        </svg>
+        未準備
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ビュー2：正面 ＋ 真後ろ -->
@@ -383,6 +410,11 @@ function maushiroPath() {
   return `${car}/${car}_真後ろ_パネル有りなし併用_${COLOR_FILE[color]}${getSfx(car, color, false)}.png`;
 }
 
+/* パーツカラーモード時のリアガラスワイプ */
+function rgPartsPath() {
+  return `${state.car}/${state.car}_リアガラス_パーツカラー_${COLOR_FILE[state.color]}.png`;
+}
+
 /* ビュー3：白固定でリアガラス比較 */
 function v3NormalPath() {
   return `${state.car}/${state.car}_リアガラス_パネルなし_白.png`;
@@ -413,6 +445,7 @@ function updateAll() {
   document.getElementById('car-value').textContent = state.car;
   if (state.view === 1) {
     load('img-main', 'no-main', mainPath());
+    if (state.partsColor) load('img-rg-parts', 'no-rg-parts', rgPartsPath());
   } else if (state.view === 2) {
     load('img-shomen', 'no-shomen', shomenPath());
     const img = document.getElementById('img-maushiro');
@@ -471,6 +504,7 @@ function applyPartsColorMode() {
   });
 
   document.getElementById('panel-main').classList.toggle('parts-mode', on);
+  document.getElementById('panel-rg-parts').classList.toggle('visible', on);
 }
 
 /* ── ビュー切替 ── */
